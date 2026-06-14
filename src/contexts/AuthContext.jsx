@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import {
   signInWithEmailAndPassword,
+  signInAnonymously,
   signOut,
   onAuthStateChanged,
 } from 'firebase/auth';
@@ -20,11 +21,19 @@ export function AuthProvider({ children }) {
       profileUnsub();
       if (firebaseUser) {
         setUser(firebaseUser);
-        // Écoute en temps réel le profil (photoURL mise à jour immédiatement)
-        profileUnsub = onSnapshot(doc(db, 'users', firebaseUser.uid), (snap) => {
-          setUserProfile(snap.exists() ? snap.data() : null);
+        if (firebaseUser.isAnonymous) {
+          // Compte démo : profil fictif, pas de document Firestore
+          setUserProfile({
+            nom: 'Démo', prenom: 'Compte', role: 'dg',
+            directionId: 'dg', isDemo: true,
+          });
           setLoading(false);
-        });
+        } else {
+          profileUnsub = onSnapshot(doc(db, 'users', firebaseUser.uid), (snap) => {
+            setUserProfile(snap.exists() ? snap.data() : null);
+            setLoading(false);
+          });
+        }
       } else {
         setUser(null);
         setUserProfile(null);
@@ -34,11 +43,12 @@ export function AuthProvider({ children }) {
     return () => { unsubscribe(); profileUnsub(); };
   }, []);
 
-  const login  = (email, password) => signInWithEmailAndPassword(auth, email, password);
-  const logout = ()                 => signOut(auth);
+  const login      = (email, password) => signInWithEmailAndPassword(auth, email, password);
+  const loginDemo  = ()                => signInAnonymously(auth);
+  const logout     = ()                => signOut(auth);
 
   return (
-    <AuthContext.Provider value={{ user, userProfile, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, userProfile, loading, login, loginDemo, logout }}>
       {children}
     </AuthContext.Provider>
   );

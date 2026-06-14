@@ -3,14 +3,27 @@ import { useNavigate, Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 export default function Login() {
-  const { user, login }         = useAuth();
-  const navigate                = useNavigate();
-  const [email, setEmail]       = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError]       = useState('');
-  const [loading, setLoading]   = useState(false);
+  const { user, login, loginDemo } = useAuth();
+  const navigate                   = useNavigate();
+  const [email, setEmail]          = useState('');
+  const [password, setPassword]    = useState('');
+  const [error, setError]          = useState('');
+  const [loading, setLoading]      = useState(false);
+  const [demoLoading, setDemoLoading] = useState(false);
 
-  if (user) return <Navigate to="/rdj" replace />;
+  if (user) return <Navigate to="/dashboard" replace />;
+
+  const handleDemo = async () => {
+    setDemoLoading(true);
+    try {
+      await loginDemo();
+      navigate('/dashboard', { replace: true });
+    } catch (e) {
+      setError('Accès démo indisponible. Activez l\'authentification anonyme dans Firebase Console.');
+    } finally {
+      setDemoLoading(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -98,10 +111,19 @@ export default function Login() {
             </button>
           </form>
 
-          <p className="mt-6 text-center text-xs text-cnssap-dim leading-relaxed">
-            Accès réservé au personnel CNSSAP.<br />
-            Contactez la DRH pour vos identifiants.
-          </p>
+          <div className="mt-5 pt-5" style={{ borderTop: '1px solid #1e1e1e' }}>
+            <button type="button" onClick={handleDemo} disabled={demoLoading}
+              className="w-full py-2.5 rounded-xl text-xs font-medium transition-all disabled:opacity-50"
+              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid #2a2a2a', color: '#888' }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = '#444'; e.currentTarget.style.color = '#ccc'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = '#2a2a2a'; e.currentTarget.style.color = '#888'; }}>
+              {demoLoading ? 'Connexion…' : '👁 Accès démo — lecture seule'}
+            </button>
+            <p className="mt-4 text-center text-xs text-cnssap-dim leading-relaxed">
+              Accès réservé au personnel CNSSAP.<br />
+              Contactez la DRH pour vos identifiants.
+            </p>
+          </div>
         </div>
 
         {/* Version */}
