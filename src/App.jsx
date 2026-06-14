@@ -9,6 +9,7 @@ import Dashboard    from './pages/dg/Dashboard';
 import Analyses     from './pages/dg/Analyses';
 import Alertes      from './pages/dg/Alertes';
 import AdminPanel   from './pages/admin/AdminPanel';
+import Splash       from './pages/Splash';
 
 function LoadingScreen() {
   return (
@@ -47,9 +48,11 @@ function RootRedirect() {
 }
 
 function AppRoutes() {
+  const splashSeen = sessionStorage.getItem('splashSeen');
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
+      <Route path="/splash" element={<Splash />} />
+      <Route path="/login"  element={<Login />} />
 
       <Route
         path="/"
@@ -59,7 +62,7 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       >
-        <Route index element={<RootRedirect />} />
+        <Route index element={splashSeen ? <RootRedirect /> : <Navigate to="/splash" replace />} />
         <Route path="rdj"          element={<RDJForm />} />
         <Route path="historique"   element={<MyHistory />} />
         <Route path="dashboard"
