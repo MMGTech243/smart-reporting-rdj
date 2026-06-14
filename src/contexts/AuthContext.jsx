@@ -4,7 +4,7 @@ import {
   signOut,
   onAuthStateChanged,
 } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import { auth, db } from '../firebase/config';
 
 const AuthContext = createContext(null);
@@ -15,19 +15,23 @@ export function AuthProvider({ children }) {
   const [loading, setLoading]         = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+    let profileUnsub = () => {};
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      profileUnsub();
       if (firebaseUser) {
-        const snap    = await getDoc(doc(db, 'users', firebaseUser.uid));
-        const profile = snap.exists() ? snap.data() : null;
         setUser(firebaseUser);
-        setUserProfile(profile);
+        // Écoute en temps réel le profil (photoURL mise à jour immédiatement)
+        profileUnsub = onSnapshot(doc(db, 'users', firebaseUser.uid), (snap) => {
+          setUserProfile(snap.exists() ? snap.data() : null);
+          setLoading(false);
+        });
       } else {
         setUser(null);
         setUserProfile(null);
+        setLoading(false);
       }
-      setLoading(false);
     });
-    return unsubscribe;
+    return () => { unsubscribe(); profileUnsub(); };
   }, []);
 
   const login  = (email, password) => signInWithEmailAndPassword(auth, email, password);
