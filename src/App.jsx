@@ -25,7 +25,7 @@ function LoadingScreen() {
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
   if (loading) return <LoadingScreen />;
-  if (!user)   return <Navigate to="/login" replace />;
+  if (!user)   return <Navigate to="/splash" replace />;
   return children;
 }
 
@@ -48,7 +48,6 @@ function RootRedirect() {
 }
 
 function AppRoutes() {
-  const splashSeen = sessionStorage.getItem('splashSeen');
   return (
     <Routes>
       <Route path="/splash" element={<Splash />} />
@@ -62,7 +61,7 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       >
-        <Route index element={splashSeen ? <RootRedirect /> : <Navigate to="/splash" replace />} />
+        <Route index element={<RootRedirect />} />
         <Route path="rdj"          element={<RDJForm />} />
         <Route path="historique"   element={<MyHistory />} />
         <Route path="dashboard"
