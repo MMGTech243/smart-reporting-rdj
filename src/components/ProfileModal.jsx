@@ -58,7 +58,9 @@ export default function ProfileModal({ onClose, onAbout }) {
     }
   };
 
-  const direction = DIRECTIONS.find(d => d.id === userProfile?.directionId)?.nom ?? '—';
+  const direction = userProfile?.role === 'admin'
+    ? 'Département Informatique'
+    : (DIRECTIONS.find(d => d.id === userProfile?.directionId)?.nom ?? '—');
   const roleLabel = (ROLE_LABELS[lang] ?? ROLE_LABELS.fr)[userProfile?.role] ?? userProfile?.role;
 
   return (
@@ -118,6 +120,8 @@ export default function ProfileModal({ onClose, onAbout }) {
             {[
               { label: t('profile.role'),      value: roleLabel },
               { label: t('profile.direction'), value: direction.replace('Direction des ','').replace('Direction ','') },
+              ...(userProfile?.poste ? [{ label: 'Poste / Fonction', value: userProfile.poste }] : []),
+              ...(userProfile?.matricule ? [{ label: 'Matricule', value: userProfile.matricule }] : []),
             ].map(r => (
               <div key={r.label} className="flex items-center justify-between px-4 py-3"
                 style={{ borderBottom: '1px solid #1a1a1a' }}>

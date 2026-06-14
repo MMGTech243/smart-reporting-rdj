@@ -131,7 +131,7 @@ export default function Login() {
             </button>
             <p className="mt-4 text-center text-xs text-cnssap-dim leading-relaxed">
               Accès réservé au personnel CNSSAP.<br />
-              Contactez la DRH pour vos identifiants.
+              Contactez le Responsable Informatique pour vos identifiants.
             </p>
           </div>
         </div>

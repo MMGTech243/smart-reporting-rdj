@@ -13,6 +13,7 @@ const ROLES = [
   { value: 'chef',  label: 'Chef de Section / CST' },
   { value: 'drh',   label: 'DRH / Administration' },
   { value: 'dg',    label: 'Directeur Général' },
+  { value: 'admin', label: 'Responsable Informatique' },
 ];
 
 function Modal({ title, onClose, children }) {
@@ -130,10 +131,11 @@ function AgentsTab() {
   });
 
   const roleBadge = (role) => ({
-    dg:    { label:'DG',    bg:'rgba(0,63,127,0.3)',    color:'#4d9fff' },
-    drh:   { label:'DRH',   bg:'rgba(46,204,113,0.15)', color:'#2ecc71' },
-    chef:  { label:'Chef',  bg:'rgba(230,126,34,0.15)', color:'#e67e22' },
-    agent: { label:'Agent', bg:'rgba(255,255,255,0.06)',color:'#888' },
+    dg:    { label:'DG',       bg:'rgba(0,63,127,0.3)',     color:'#4d9fff' },
+    drh:   { label:'DRH',      bg:'rgba(46,204,113,0.15)',  color:'#2ecc71' },
+    chef:  { label:'Chef',     bg:'rgba(230,126,34,0.15)',  color:'#e67e22' },
+    agent: { label:'Agent',    bg:'rgba(255,255,255,0.06)', color:'#888' },
+    admin: { label:'Inf.',     bg:'rgba(155,89,182,0.2)',   color:'#9b59b6' },
   }[role] ?? { label:role, bg:'#1a1a1a', color:'#888' });
 
   return (
