@@ -34,8 +34,8 @@ export default function Sidebar() {
   const roleLabel = (ROLE_LABELS[lang] ?? ROLE_LABELS.fr)[role] ?? role;
 
   const handleLogout = async () => {
-    await logout();
     navigate('/');
+    await logout();
   };
 
   return (

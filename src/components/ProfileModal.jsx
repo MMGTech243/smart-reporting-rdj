@@ -19,8 +19,8 @@ export default function ProfileModal({ onClose, onAbout }) {
 
   const handleLogout = async () => {
     onClose();
-    await logout();
     navigate('/');
+    await logout();
   };
   const [uploading, setUploading] = useState(false);
   const [success,   setSuccess]   = useState('');
