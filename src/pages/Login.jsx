@@ -1,10 +1,12 @@
 import { useState } from 'react';
-import { useNavigate, Navigate } from 'react-router-dom';
+import { useNavigate, Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 export default function Login() {
   const { user, login, loginDemo } = useAuth();
   const navigate                   = useNavigate();
+  const location                   = useLocation();
+  const fromRoleSelect             = !!location.state?.roleHint;
   const [email, setEmail]          = useState('');
   const [password, setPassword]    = useState('');
   const [error, setError]          = useState('');
@@ -60,6 +62,14 @@ export default function Login() {
         style={{ background: 'radial-gradient(circle, rgba(77,159,255,0.08) 0%, transparent 70%)' }} />
 
       <div className="w-full max-w-sm relative animate-fade-up">
+        {/* Retour */}
+        <div className="mb-6">
+          <button onClick={() => navigate(fromRoleSelect ? '/role-select' : '/')}
+            className="inline-flex items-center gap-1.5 text-xs text-cnssap-dim hover:text-white transition-colors">
+            ← Retour
+          </button>
+        </div>
+
         {/* Logo */}
         <div className="text-center mb-8">
           <div className="inline-block relative">
