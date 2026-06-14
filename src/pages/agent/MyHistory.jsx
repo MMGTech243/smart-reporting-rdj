@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import {
   collection, query, where, orderBy, limit, getDocs,
+  doc, updateDoc, serverTimestamp, deleteField,
 } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { useAuth } from '../../contexts/AuthContext';
@@ -15,7 +16,64 @@ function monthRange() {
   return [s.toISOString().split('T')[0], e.toISOString().split('T')[0]];
 }
 
-function ReportCard({ report, expanded, onToggle, showAgent }) {
+function SignatureSlot({ label, short, signature, canSign, onSign, onUnsign, currentUserId }) {
+  const signedDate = signature?.signedAt?.toDate?.();
+  const dateLabel = signedDate
+    ? signedDate.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })
+        + ' ' + signedDate.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+    : '—';
+
+  if (signature) {
+    return (
+      <div className="flex items-start gap-3 p-3 rounded-xl"
+        style={{ background: 'rgba(46,204,113,0.06)', border: '1px solid rgba(46,204,113,0.2)' }}>
+        <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 text-base"
+          style={{ background: 'rgba(46,204,113,0.12)' }}>✅</div>
+        <div className="flex-1 min-w-0">
+          <p className="text-[10px] font-bold text-cnssap-success uppercase tracking-wide mb-0.5">{short}</p>
+          <p className="text-xs font-semibold text-white">
+            {signature.prenom} {signature.nom}
+          </p>
+          <p className="text-[10px] text-cnssap-dim">{signature.poste}</p>
+          <p className="text-[10px] text-cnssap-dim mt-0.5">{dateLabel}</p>
+        </div>
+        {signature.signedBy === currentUserId && (
+          <button onClick={onUnsign}
+            className="text-[10px] text-red-400 hover:text-red-300 shrink-0 transition-colors mt-0.5">
+            ✕
+          </button>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-3 p-3 rounded-xl"
+      style={{ background: '#0d0d0d', border: '1px dashed rgba(255,255,255,0.1)' }}>
+      <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 text-base"
+        style={{ background: 'rgba(255,255,255,0.04)' }}>✍️</div>
+      <div className="flex-1 min-w-0">
+        <p className="text-[10px] font-bold text-cnssap-dim uppercase tracking-wide mb-0.5">{short}</p>
+        <p className="text-xs text-cnssap-dim italic">{label}</p>
+      </div>
+      {canSign && (
+        <button onClick={onSign}
+          className="text-[10px] font-bold shrink-0 px-2.5 py-1.5 rounded-lg transition-all"
+          style={{
+            background: 'rgba(77,159,255,0.1)',
+            border: '1px solid rgba(77,159,255,0.3)',
+            color: '#4d9fff',
+          }}
+          onMouseEnter={e => e.currentTarget.style.background = 'rgba(77,159,255,0.2)'}
+          onMouseLeave={e => e.currentTarget.style.background = 'rgba(77,159,255,0.1)'}>
+          Signer
+        </button>
+      )}
+    </div>
+  );
+}
+
+function ReportCard({ report, expanded, onToggle, showAgent, canSign, onSign, currentUserId }) {
   const date = new Date(report.date + 'T00:00:00');
   const dateLabel = date.toLocaleDateString('fr-FR', {
     weekday: 'short', day: 'numeric', month: 'short', year: 'numeric',
@@ -23,6 +81,10 @@ function ReportCard({ report, expanded, onToggle, showAgent }) {
   const submittedAt = report.submittedAt?.toDate?.()?.toLocaleTimeString('fr-FR', {
     hour: '2-digit', minute: '2-digit',
   }) ?? '—';
+
+  const sigCA  = report.signatureCA;
+  const sigCST = report.signatureCST;
+  const bothSigned = sigCA && sigCST;
 
   return (
     <div className="bg-cnssap-surface border border-cnssap-border rounded-xl overflow-hidden">
@@ -54,6 +116,11 @@ function ReportCard({ report, expanded, onToggle, showAgent }) {
           {report.heureArrivee && report.heureArrivee > '08:30' && (
             <span className="text-xs bg-amber-900/40 text-cnssap-warning border border-cnssap-warning/30 px-2 py-0.5 rounded-full">
               Retard
+            </span>
+          )}
+          {bothSigned && (
+            <span className="text-xs bg-green-900/40 text-cnssap-success border border-cnssap-success/30 px-2 py-0.5 rounded-full font-medium">
+              ✅ Signé
             </span>
           )}
           <span className="text-cnssap-dim text-sm">{expanded ? '▲' : '▼'}</span>
@@ -117,6 +184,31 @@ function ReportCard({ report, expanded, onToggle, showAgent }) {
               <p className="text-cnssap-muted whitespace-pre-line">{report.observations}</p>
             </div>
           )}
+
+          {/* Signatures numériques */}
+          <div>
+            <p className="text-xs font-semibold text-cnssap-accent uppercase tracking-wide mb-2">VII — Signatures numériques</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <SignatureSlot
+                label="En attente de signature CA"
+                short="Chef d'Agence (CA)"
+                signature={sigCA}
+                canSign={canSign && !sigCA}
+                onSign={() => onSign(report.id, 'CA')}
+                onUnsign={() => onSign(report.id, 'CA', true)}
+                currentUserId={currentUserId}
+              />
+              <SignatureSlot
+                label="En attente de signature CST"
+                short="Chef de Service Technique (CST)"
+                signature={sigCST}
+                canSign={canSign && !sigCST}
+                onSign={() => onSign(report.id, 'CST')}
+                onUnsign={() => onSign(report.id, 'CST', true)}
+                currentUserId={currentUserId}
+              />
+            </div>
+          </div>
         </div>
       )}
     </div>
@@ -126,6 +218,7 @@ function ReportCard({ report, expanded, onToggle, showAgent }) {
 export default function MyHistory() {
   const { user, userProfile } = useAuth();
   const isSupervisor = ['dg','drh'].includes(userProfile?.role);
+  const canSign = ['dg','drh','chef'].includes(userProfile?.role) && !userProfile?.isDemo;
 
   const [reports,    setReports]   = useState([]);
   const [allUsers,   setAllUsers]  = useState([]);
@@ -178,7 +271,36 @@ export default function MyHistory() {
 
   useEffect(() => { loadReports(); }, [loadReports]);
 
-  // Filtres client-side (direction + recherche)
+  const handleSign = useCallback(async (reportId, type, unsign = false) => {
+    const ref = doc(db, 'rdj_reports', reportId);
+    const field = `signature${type}`;
+    if (unsign) {
+      await updateDoc(ref, { [field]: deleteField() });
+      setReports(prev => prev.map(r => {
+        if (r.id !== reportId) return r;
+        const next = { ...r };
+        delete next[field];
+        return next;
+      }));
+    } else {
+      const sigData = {
+        signedBy: user.uid,
+        nom:    userProfile.nom,
+        prenom: userProfile.prenom,
+        poste:  userProfile.poste ?? (type === 'CA' ? "Chef d'Agence" : 'Chef de Service Technique'),
+        signedAt: serverTimestamp(),
+      };
+      await updateDoc(ref, { [field]: sigData });
+      setReports(prev => prev.map(r => {
+        if (r.id !== reportId) return r;
+        return {
+          ...r,
+          [field]: { ...sigData, signedAt: { toDate: () => new Date() } },
+        };
+      }));
+    }
+  }, [user, userProfile]);
+
   const filtered = reports.filter(r => {
     if (dirFilter !== 'all' && r.directionId !== dirFilter) return false;
     if (search) {
@@ -292,6 +414,9 @@ export default function MyHistory() {
             expanded={expanded === r.id}
             onToggle={() => setExpanded(p => p === r.id ? null : r.id)}
             showAgent={isSupervisor}
+            canSign={canSign}
+            onSign={handleSign}
+            currentUserId={user?.uid}
           />
         ))}
       </div>

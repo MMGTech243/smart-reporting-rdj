@@ -107,7 +107,7 @@ export default function Splash() {
           ) : (
             /* Non connecté */
             <>
-              <button onClick={() => navigate('/login')} className="btn-primary w-full py-3.5 text-sm font-semibold">
+              <button onClick={() => navigate('/role-select')} className="btn-primary w-full py-3.5 text-sm font-semibold">
                 Se connecter →
               </button>
               <button onClick={() => navigate('/login')}

@@ -56,8 +56,12 @@ service cloud.firestore {
                     ));
       allow create: if isAuth() && !isAnonymous() &&
                        request.resource.data.userId == request.auth.uid;
-      allow update: if isAuth() && !isAnonymous() &&
-                       resource.data.userId == request.auth.uid;
+      allow update: if isAuth() && !isAnonymous() && (
+        resource.data.userId == request.auth.uid ||
+        ((isSupervisor() || isChef()) &&
+         request.resource.data.diff(resource.data).affectedKeys()
+           .hasOnly(['signatureCA', 'signatureCST']))
+      );
       allow delete: if isAuth() && !isAnonymous() && isSupervisor();
     }
 

@@ -3,6 +3,7 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import Layout       from './components/layout/Layout';
 import Login        from './pages/Login';
 import Splash       from './pages/Splash';
+import RoleSelect   from './pages/RoleSelect';
 import Unauthorized from './pages/Unauthorized';
 import RDJForm      from './pages/agent/RDJForm';
 import MyHistory    from './pages/agent/MyHistory';
@@ -53,6 +54,7 @@ function AppRoutes() {
       {/* Entrée de l'app — toujours la splash, sans vérification d'auth */}
       <Route path="/"       element={<Splash />} />
       <Route path="/splash" element={<Splash />} />
+      <Route path="/role-select" element={<RoleSelect />} />
       <Route path="/login"  element={<Login />} />
 
       {/* Pages protégées dans le Layout */}
