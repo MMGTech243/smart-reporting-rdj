@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { doc, updateDoc } from 'firebase/firestore';
 import { storage, db } from '../firebase/config';
@@ -12,8 +13,15 @@ const ROLE_LABELS = {
 };
 
 export default function ProfileModal({ onClose, onAbout }) {
-  const { user, userProfile } = useAuth();
-  const { lang, setLang, t }  = useLanguage();
+  const { user, userProfile, logout } = useAuth();
+  const { lang, setLang, t }          = useLanguage();
+  const navigate                       = useNavigate();
+
+  const handleLogout = async () => {
+    onClose();
+    await logout();
+    navigate('/');
+  };
   const [uploading, setUploading] = useState(false);
   const [success,   setSuccess]   = useState('');
   const [preview,   setPreview]   = useState(null);
@@ -157,6 +165,15 @@ export default function ProfileModal({ onClose, onAbout }) {
             style={{ background: '#0d0d0d', border: '1px solid #1e1e1e' }}>
             <span className="text-xs text-cnssap-dim">{t('about.title')}</span>
             <span className="text-cnssap-dim text-xs">›</span>
+          </button>
+
+          {/* Déconnexion */}
+          <button onClick={handleLogout}
+            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-semibold transition-colors"
+            style={{ background: 'rgba(231,76,60,0.08)', border: '1px solid rgba(231,76,60,0.2)', color: '#e74c3c' }}
+            onMouseEnter={e => e.currentTarget.style.background = 'rgba(231,76,60,0.15)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'rgba(231,76,60,0.08)'}>
+            🚪 {t('nav.logout')}
           </button>
         </div>
       </div>

@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function Splash() {
-  const navigate  = useNavigate();
+  const navigate              = useNavigate();
+  const { user, userProfile, loading, logout } = useAuth();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -10,12 +12,22 @@ export default function Splash() {
     return () => clearTimeout(t);
   }, []);
 
+  const handleContinue = () => {
+    if (userProfile?.role === 'dg' || userProfile?.role === 'drh') {
+      navigate('/app/dashboard');
+    } else {
+      navigate('/app/rdj');
+    }
+  };
+
+  const handleLogout = async () => {
+    await logout();
+  };
+
   return (
-    <div
-      className="fixed inset-0 flex flex-col items-center justify-center"
-      style={{ background: '#080808' }}
-    >
-      {/* Glow de fond */}
+    <div className="fixed inset-0 flex flex-col items-center justify-center" style={{ background: '#080808' }}>
+
+      {/* Glow */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full"
           style={{
@@ -47,16 +59,9 @@ export default function Splash() {
         </div>
 
         {/* Texte */}
-        <div style={{
-          opacity: visible ? 1 : 0,
-          transition: 'opacity 0.6s ease 0.2s',
-        }}>
-          <p className="text-[11px] font-bold text-cnssap-accent uppercase tracking-[0.35em] mb-3">
-            CNSSAP
-          </p>
-          <h1 className="text-3xl font-bold text-white tracking-tight mb-2">
-            Smart Reporting RDJ
-          </h1>
+        <div style={{ opacity: visible ? 1 : 0, transition: 'opacity 0.6s ease 0.2s' }}>
+          <p className="text-[11px] font-bold text-cnssap-accent uppercase tracking-[0.35em] mb-3">CNSSAP</p>
+          <h1 className="text-3xl font-bold text-white tracking-tight mb-2">Smart Reporting RDJ</h1>
           <p className="text-sm text-cnssap-muted leading-relaxed max-w-xs mx-auto">
             Reporting Déclaratif Journalier<br />d'Assiduité et Productivité
           </p>
@@ -69,29 +74,49 @@ export default function Splash() {
           Système numérique de gestion des présences et de productivité du personnel CNSSAP
         </p>
 
-        {/* Bouton principal */}
-        <div style={{
-          opacity: visible ? 1 : 0,
-          transition: 'opacity 0.6s ease 0.5s',
-          width: '100%',
-          maxWidth: '260px',
-        }}>
-          <button
-            onClick={() => navigate('/login')}
-            className="btn-primary w-full py-3.5 text-sm font-semibold tracking-wide"
-          >
-            Se connecter →
-          </button>
-        </div>
+        {/* Boutons — selon l'état d'auth */}
+        <div className="flex flex-col items-center gap-3 w-full max-w-[260px]"
+          style={{ opacity: visible && !loading ? 1 : 0, transition: 'opacity 0.6s ease 0.5s' }}>
 
-        {/* Démo */}
-        <button
-          onClick={() => navigate('/login')}
-          className="text-xs text-cnssap-dim hover:text-white transition-colors"
-          style={{ opacity: visible ? 1 : 0, transition: 'opacity 0.6s ease 0.6s' }}
-        >
-          👁 Accès démo
-        </button>
+          {loading ? (
+            <div className="flex items-center gap-2 text-cnssap-dim text-sm">
+              <span className="w-3.5 h-3.5 border-2 border-cnssap-dim/30 border-t-cnssap-dim rounded-full animate-spin" />
+              Chargement…
+            </div>
+
+          ) : user ? (
+            /* Déjà connecté */
+            <>
+              <div className="w-full px-4 py-3 rounded-xl text-center"
+                style={{ background: 'rgba(46,204,113,0.08)', border: '1px solid rgba(46,204,113,0.2)' }}>
+                <p className="text-[10px] text-cnssap-success mb-0.5">Connecté en tant que</p>
+                <p className="text-sm font-semibold text-white">
+                  {userProfile?.prenom} {userProfile?.nom}
+                </p>
+              </div>
+              <button onClick={handleContinue} className="btn-primary w-full py-3.5 text-sm font-semibold">
+                Continuer →
+              </button>
+              <button onClick={handleLogout}
+                className="text-xs transition-colors"
+                style={{ color: '#e74c3c' }}>
+                Changer de compte
+              </button>
+            </>
+
+          ) : (
+            /* Non connecté */
+            <>
+              <button onClick={() => navigate('/login')} className="btn-primary w-full py-3.5 text-sm font-semibold">
+                Se connecter →
+              </button>
+              <button onClick={() => navigate('/login')}
+                className="text-xs text-cnssap-dim hover:text-white transition-colors">
+                👁 Accès démo
+              </button>
+            </>
+          )}
+        </div>
       </div>
 
       {/* Footer */}
