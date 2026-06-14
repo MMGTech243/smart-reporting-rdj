@@ -1,16 +1,19 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
-import Layout       from './components/layout/Layout';
-import Login        from './pages/Login';
-import Splash       from './pages/Splash';
-import RoleSelect   from './pages/RoleSelect';
-import Unauthorized from './pages/Unauthorized';
-import RDJForm      from './pages/agent/RDJForm';
-import MyHistory    from './pages/agent/MyHistory';
-import Dashboard    from './pages/dg/Dashboard';
-import Analyses     from './pages/dg/Analyses';
-import Alertes      from './pages/dg/Alertes';
-import AdminPanel   from './pages/admin/AdminPanel';
+import { ThemeProvider }  from './contexts/ThemeContext';
+import Layout        from './components/layout/Layout';
+import Login         from './pages/Login';
+import Splash        from './pages/Splash';
+import RoleSelect    from './pages/RoleSelect';
+import Unauthorized  from './pages/Unauthorized';
+import RDJForm       from './pages/agent/RDJForm';
+import MyHistory     from './pages/agent/MyHistory';
+import CalendarView  from './pages/agent/CalendarView';
+import StatsView     from './pages/agent/StatsView';
+import Dashboard     from './pages/dg/Dashboard';
+import Analyses      from './pages/dg/Analyses';
+import Alertes       from './pages/dg/Alertes';
+import AdminPanel    from './pages/admin/AdminPanel';
 
 function LoadingScreen() {
   return (
@@ -66,6 +69,8 @@ function AppRoutes() {
         <Route index element={<HomeRedirect />} />
         <Route path="rdj"          element={<RDJForm />} />
         <Route path="historique"   element={<MyHistory />} />
+        <Route path="calendrier"   element={<CalendarView />} />
+        <Route path="stats"        element={<StatsView />} />
         <Route path="dashboard"
           element={<RoleRoute roles={['dg','drh']}><Dashboard /></RoleRoute>} />
         <Route path="analyses"
@@ -86,10 +91,12 @@ function AppRoutes() {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <AppRoutes />
-      </BrowserRouter>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <BrowserRouter>
+          <AppRoutes />
+        </BrowserRouter>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }

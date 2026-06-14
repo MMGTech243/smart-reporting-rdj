@@ -2,6 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Thème couleurs ──────────────────────────────────────── */
+:root {
+  --cn-bg:       #0a0a0a;
+  --cn-surface:  #111111;
+  --cn-surface2: #1a1a1a;
+  --cn-border:   #222222;
+  --cn-border2:  #333333;
+  --cn-text:     #e0e0e0;
+  --cn-muted:    #888888;
+  --cn-dim:      #555555;
+}
+
+html.light-theme {
+  --cn-bg:       #f0f2f5;
+  --cn-surface:  #ffffff;
+  --cn-surface2: #f8f9fa;
+  --cn-border:   #e0e0e0;
+  --cn-border2:  #cccccc;
+  --cn-text:     #1a1a1a;
+  --cn-muted:    #555555;
+  --cn-dim:      #999999;
+}
+
+html.light-theme body { background: var(--cn-bg); color: var(--cn-text); }
+
 @layer base {
   * { box-sizing: border-box; }
 
@@ -11,8 +36,8 @@
 
   body {
     margin: 0;
-    background: #0a0a0a;
-    color: #e0e0e0;
+    background: var(--cn-bg);
+    color: var(--cn-text);
     font-family: "Segoe UI", system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
   }

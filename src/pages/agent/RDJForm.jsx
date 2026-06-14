@@ -61,6 +61,7 @@ export default function RDJForm() {
   const [saving,      setSaving]    = useState(false);
   const [saveError,   setError]     = useState('');
   const [saveSuccess, setSuccess]   = useState(false);
+  const [gpsStatus,   setGps]       = useState('idle'); // idle | capturing | ok | denied
 
   const [ass, setAss] = useState({ heureArrivee:'', heureDepartPause:'', heureRetourPause:'', heureDepart:'', mouvements:[] });
   const [taches,   setTaches]  = useState([{ description:'', categorie:'Administratif' }]);
@@ -106,6 +107,20 @@ export default function RDJForm() {
     const tf = taches.filter(t=>t.description.trim());
     if (!tf.length) { setError('Ajoutez au moins une tâche (Section IV).'); return; }
     setError(''); setSaving(true);
+
+    // Géolocalisation
+    let location = null;
+    if (navigator.geolocation) {
+      setGps('capturing');
+      try {
+        const pos = await new Promise((res, rej) =>
+          navigator.geolocation.getCurrentPosition(res, rej, { timeout: 6000, enableHighAccuracy: false })
+        );
+        location = { lat: pos.coords.latitude, lng: pos.coords.longitude, accuracy: Math.round(pos.coords.accuracy) };
+        setGps('ok');
+      } catch { setGps('denied'); }
+    }
+
     const payload = {
       userId:user.uid, date:today(), submittedAt:serverTimestamp(), signedAt:serverTimestamp(),
       nom:userProfile?.nom??'', prenom:userProfile?.prenom??'', matricule:userProfile?.matricule??'',
@@ -113,6 +128,7 @@ export default function RDJForm() {
       directionNom:DIRECTIONS.find(d=>d.id===userProfile?.directionId)?.nom??'',
       ...ass, heuresEffectives:heuresEff??'',
       taches:tf, developpement:devPerso.filter(d=>d.titre.trim()), observations:obs.trim(),
+      ...(location ? { location } : {}),
     };
     try {
       if (existingId) { await updateDoc(doc(db,'rdj_reports',existingId),payload); }
@@ -139,12 +155,20 @@ export default function RDJForm() {
           <p className="text-xs text-cnssap-dim mt-1 capitalize">{dateLabel}</p>
           <p className="text-xs text-cnssap-dim/50 mt-0.5">Formulaire FOR-DRH-001</p>
         </div>
-        {existingId && !saveSuccess && (
-          <span className="text-xs font-semibold px-3 py-1 rounded-full"
-            style={{background:'rgba(46,204,113,0.1)',border:'1px solid rgba(46,204,113,0.25)',color:'#2ecc71'}}>
-            ✓ Soumis
-          </span>
-        )}
+        <div className="flex items-center gap-2">
+          {existingId && !saveSuccess && (
+            <span className="text-xs font-semibold px-3 py-1 rounded-full"
+              style={{background:'rgba(46,204,113,0.1)',border:'1px solid rgba(46,204,113,0.25)',color:'#2ecc71'}}>
+              ✓ Soumis
+            </span>
+          )}
+          {gpsStatus === 'ok' && (
+            <span className="text-xs px-2 py-1 rounded-full"
+              style={{background:'rgba(77,159,255,0.1)',border:'1px solid rgba(77,159,255,0.25)',color:'#4d9fff'}}>
+              📍 GPS
+            </span>
+          )}
+        </div>
       </div>
 
       {saveSuccess && (

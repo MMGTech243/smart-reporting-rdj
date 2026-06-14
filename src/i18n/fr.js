@@ -5,6 +5,8 @@ export default {
   'nav.analyses':    'Analyses RH',
   'nav.alertes':     'Alertes',
   'nav.historique':  'Historique',
+  'nav.calendrier':  'Calendrier',
+  'nav.stats':       'Statistiques',
   'nav.admin':       'Administration',
   'nav.logout':      'Se déconnecter',
 

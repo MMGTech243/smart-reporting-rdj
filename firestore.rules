@@ -64,7 +64,7 @@ service cloud.firestore {
         resource.data.userId == request.auth.uid ||
         ((isSupervisor() || isChef()) &&
          request.resource.data.diff(resource.data).affectedKeys()
-           .hasOnly(['signatureCA', 'signatureCST']))
+           .hasOnly(['signatureCA', 'signatureCST', 'commentaireSuperviseur']))
       );
       allow delete: if isAuth() && !isAnonymous() && isSupervisor();
     }

@@ -16,15 +16,23 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
-  // Navigation: network-first, fallback to cached shell
   if (e.request.mode === 'navigate') {
-    e.respondWith(
-      fetch(e.request).catch(() => caches.match('/index.html'))
-    );
+    e.respondWith(fetch(e.request).catch(() => caches.match('/index.html')));
     return;
   }
-  // Assets: cache-first
-  e.respondWith(
-    caches.match(e.request).then(cached => cached || fetch(e.request))
-  );
+  const url = new URL(e.request.url);
+  if (url.hostname.includes('googleapis') || url.hostname.includes('firebaseio') ||
+      url.hostname.includes('firestore') || url.hostname.includes('firebase')) return;
+  e.respondWith(caches.match(e.request).then(cached => cached || fetch(e.request)));
+});
+
+self.addEventListener('message', e => {
+  if (e.data?.type === 'REMIND') {
+    self.registration.showNotification('📋 Rapport RDJ — CNSSAP', {
+      body: e.data.body ?? "N'oubliez pas de soumettre votre rapport journalier !",
+      icon: '/logo.jpeg',
+      badge: '/logo.jpeg',
+      tag: 'rdj-reminder',
+    });
+  }
 });

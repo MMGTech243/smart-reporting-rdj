@@ -2,9 +2,11 @@
 import { useNavigate } from 'react-router-dom';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { doc, updateDoc } from 'firebase/firestore';
-import { storage, db } from '../firebase/config';
+import { updatePassword, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth';
+import { storage, db, auth } from '../firebase/config';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useTheme } from '../contexts/ThemeContext';
 import { DIRECTIONS } from '../data/directions';
 
 const ROLE_LABELS = {
@@ -15,6 +17,7 @@ const ROLE_LABELS = {
 export default function ProfileModal({ onClose, onAbout }) {
   const { user, userProfile, logout } = useAuth();
   const { lang, setLang, t }          = useLanguage();
+  const { theme, toggle: toggleTheme } = useTheme();
   const navigate                       = useNavigate();
 
   const handleLogout = async () => {
@@ -22,11 +25,38 @@ export default function ProfileModal({ onClose, onAbout }) {
     navigate('/');
     await logout();
   };
+
+  // Photo
   const [uploading, setUploading] = useState(false);
   const [success,   setSuccess]   = useState('');
   const [preview,   setPreview]   = useState(null);
   const [file,      setFile]      = useState(null);
   const inputRef = useRef();
+
+  // Mot de passe
+  const [showPw,    setShowPw]    = useState(false);
+  const [pwForm,    setPwForm]    = useState({ current:'', newPw:'', confirm:'' });
+  const [pwLoading, setPwLoading] = useState(false);
+  const [pwMsg,     setPwMsg]     = useState({ text:'', ok: false });
+
+  const handlePasswordChange = async (e) => {
+    e.preventDefault();
+    if (pwForm.newPw !== pwForm.confirm) { setPwMsg({ text:'Les mots de passe ne correspondent pas.', ok:false }); return; }
+    if (pwForm.newPw.length < 6) { setPwMsg({ text:'Minimum 6 caractères.', ok:false }); return; }
+    setPwLoading(true); setPwMsg({ text:'', ok:false });
+    try {
+      const cred = EmailAuthProvider.credential(user.email, pwForm.current);
+      await reauthenticateWithCredential(auth.currentUser, cred);
+      await updatePassword(auth.currentUser, pwForm.newPw);
+      setPwMsg({ text:'Mot de passe modifié avec succès.', ok:true });
+      setPwForm({ current:'', newPw:'', confirm:'' });
+    } catch (err) {
+      const msg = err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential'
+        ? 'Mot de passe actuel incorrect.'
+        : err.message;
+      setPwMsg({ text: msg, ok:false });
+    } finally { setPwLoading(false); }
+  };
 
   const initials = [userProfile?.prenom?.[0], userProfile?.nom?.[0]]
     .filter(Boolean).join('').toUpperCase() || '?';
@@ -162,6 +192,58 @@ export default function ProfileModal({ onClose, onAbout }) {
               ))}
             </div>
           </div>
+
+          {/* Thème */}
+          <div>
+            <p className="text-[10px] font-semibold text-cnssap-dim uppercase tracking-wide mb-2">Thème</p>
+            <button onClick={toggleTheme}
+              className="w-full flex items-center justify-between px-4 py-3 rounded-xl transition-colors hover:bg-white/[0.04]"
+              style={{ background: '#0d0d0d', border: '1px solid #1e1e1e' }}>
+              <span className="text-xs text-cnssap-text flex items-center gap-2">
+                {theme === 'dark' ? '🌙 Mode sombre' : '☀️ Mode clair'}
+              </span>
+              <div className="w-10 h-5 rounded-full relative transition-colors"
+                style={{ background: theme === 'light' ? '#4d9fff' : '#333' }}>
+                <div className="absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all"
+                  style={{ left: theme === 'light' ? '22px' : '2px' }} />
+              </div>
+            </button>
+          </div>
+
+          {/* Changer mot de passe */}
+          {user && !user.isAnonymous && (
+            <div>
+              <button onClick={() => setShowPw(s => !s)}
+                className="w-full flex items-center justify-between px-4 py-3 rounded-xl transition-colors hover:bg-white/[0.04]"
+                style={{ background: '#0d0d0d', border: '1px solid #1e1e1e' }}>
+                <span className="text-xs text-cnssap-text flex items-center gap-2">🔒 Changer le mot de passe</span>
+                <span className="text-cnssap-dim text-xs">{showPw ? '▲' : '▼'}</span>
+              </button>
+              {showPw && (
+                <form onSubmit={handlePasswordChange} className="mt-2 space-y-2 px-1">
+                  {[
+                    { key: 'current', ph: 'Mot de passe actuel' },
+                    { key: 'newPw',   ph: 'Nouveau mot de passe' },
+                    { key: 'confirm', ph: 'Confirmer le nouveau' },
+                  ].map(f => (
+                    <input key={f.key} type="password" placeholder={f.ph}
+                      value={pwForm[f.key]}
+                      onChange={e => setPwForm(p => ({ ...p, [f.key]: e.target.value }))}
+                      className="input-premium w-full text-xs" />
+                  ))}
+                  {pwMsg.text && (
+                    <p className={`text-xs px-3 py-2 rounded-lg ${pwMsg.ok ? 'text-cnssap-success bg-green-900/20' : 'text-cnssap-danger bg-red-900/20'}`}>
+                      {pwMsg.text}
+                    </p>
+                  )}
+                  <button type="submit" disabled={pwLoading}
+                    className="btn-primary w-full py-2 text-xs disabled:opacity-50">
+                    {pwLoading ? 'Modification…' : 'Modifier le mot de passe'}
+                  </button>
+                </form>
+              )}
+            </div>
+          )}
 
           {/* About link */}
           <button onClick={() => { onClose(); onAbout(); }}

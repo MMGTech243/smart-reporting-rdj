@@ -73,7 +73,26 @@ function SignatureSlot({ label, short, signature, canSign, onSign, onUnsign, cur
   );
 }
 
-function ReportCard({ report, expanded, onToggle, showAgent, canSign, onSign, currentUserId }) {
+function ReportCard({ report, expanded, onToggle, showAgent, canSign, onSign, currentUserId, onComment }) {
+  const [comment,   setComment]   = useState(report.commentaireSuperviseur ?? '');
+  const [savingCmt, setSavingCmt] = useState(false);
+  const [cmtSaved,  setCmtSaved]  = useState(false);
+
+  const handleShare = async () => {
+    const text = `📋 Rapport RDJ — CNSSAP\n${report.prenom} ${report.nom}${report.poste ? ` (${report.poste})` : ''}\nDate : ${report.date}\nArrivée : ${report.heureArrivee ?? '—'} | Départ : ${report.heureDepart ?? '—'} | Heures effectives : ${report.heuresEffectives ?? '—'}\nTâches : ${report.taches?.length ?? 0}`;
+    try {
+      if (navigator.share) await navigator.share({ title: 'Rapport RDJ', text });
+      else window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+    } catch {}
+  };
+
+  const saveComment = async () => {
+    setSavingCmt(true);
+    await onComment(report.id, comment);
+    setCmtSaved(true);
+    setTimeout(() => setCmtSaved(false), 2000);
+    setSavingCmt(false);
+  };
   const date = new Date(report.date + 'T00:00:00');
   const dateLabel = date.toLocaleDateString('fr-FR', {
     weekday: 'short', day: 'numeric', month: 'short', year: 'numeric',
@@ -185,6 +204,44 @@ function ReportCard({ report, expanded, onToggle, showAgent, canSign, onSign, cu
             </div>
           )}
 
+          {/* Commentaire superviseur */}
+          {canSign && (
+            <div>
+              <p className="text-xs font-semibold text-cnssap-accent uppercase tracking-wide mb-2">Commentaire superviseur</p>
+              <textarea
+                value={comment}
+                onChange={e => setComment(e.target.value)}
+                placeholder="Observations, directives, évaluations…"
+                rows={3}
+                className="input-premium w-full text-xs resize-none"
+              />
+              <div className="flex items-center gap-2 mt-2">
+                <button onClick={saveComment} disabled={savingCmt}
+                  className="px-3 py-1.5 text-xs font-semibold rounded-lg disabled:opacity-50 transition-colors"
+                  style={{ background: 'rgba(77,159,255,0.15)', border: '1px solid rgba(77,159,255,0.3)', color: '#4d9fff' }}>
+                  {savingCmt ? 'Sauvegarde…' : 'Enregistrer'}
+                </button>
+                {cmtSaved && <span className="text-xs text-cnssap-success">✓ Enregistré</span>}
+              </div>
+            </div>
+          )}
+          {!canSign && report.commentaireSuperviseur && (
+            <div>
+              <p className="text-xs font-semibold text-cnssap-accent uppercase tracking-wide mb-1">Commentaire superviseur</p>
+              <p className="text-xs text-cnssap-muted whitespace-pre-line bg-cnssap-surface2 rounded-lg px-3 py-2 border border-cnssap-border">
+                {report.commentaireSuperviseur}
+              </p>
+            </div>
+          )}
+
+          {/* Bouton partager */}
+          <div className="flex justify-end">
+            <button onClick={handleShare}
+              className="flex items-center gap-1.5 text-xs text-cnssap-dim hover:text-white transition-colors px-3 py-1.5 rounded-lg hover:bg-white/[0.05]">
+              <span>📤</span> Partager
+            </button>
+          </div>
+
           {/* Signatures numériques */}
           <div>
             <p className="text-xs font-semibold text-cnssap-accent uppercase tracking-wide mb-2">VII — Signatures numériques</p>
@@ -270,6 +327,11 @@ export default function MyHistory() {
   }, [user, isSupervisor, startDate, endDate]);
 
   useEffect(() => { loadReports(); }, [loadReports]);
+
+  const handleComment = useCallback(async (reportId, text) => {
+    await updateDoc(doc(db, 'rdj_reports', reportId), { commentaireSuperviseur: text });
+    setReports(prev => prev.map(r => r.id === reportId ? { ...r, commentaireSuperviseur: text } : r));
+  }, []);
 
   const handleSign = useCallback(async (reportId, type, unsign = false) => {
     const ref = doc(db, 'rdj_reports', reportId);
@@ -416,6 +478,7 @@ export default function MyHistory() {
             showAgent={isSupervisor}
             canSign={canSign}
             onSign={handleSign}
+            onComment={handleComment}
             currentUserId={user?.uid}
           />
         ))}

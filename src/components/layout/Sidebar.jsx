@@ -11,6 +11,8 @@ const NAV = [
   { to: '/app/analyses',   key: 'nav.analyses',    icon: '📊', roles: ['dg','drh'] },
   { to: '/app/alertes',    key: 'nav.alertes',     icon: '🔔', roles: ['dg','drh'] },
   { to: '/app/historique', key: 'nav.historique',  icon: '📁', roles: ['dg','drh','chef','agent'] },
+  { to: '/app/calendrier', key: 'nav.calendrier',  icon: '📅', roles: ['chef','agent'] },
+  { to: '/app/stats',      key: 'nav.stats',       icon: '📈', roles: ['chef','agent'] },
   { to: '/app/admin',      key: 'nav.admin',       icon: '⚙️', roles: ['admin'] },
 ];
 
