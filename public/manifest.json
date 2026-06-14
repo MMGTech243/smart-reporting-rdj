@@ -1,0 +1,17 @@
+{
+  "name": "Smart Reporting RDJ — CNSSAP",
+  "short_name": "RDJ CNSSAP",
+  "description": "Reporting Déclaratif Journalier d'Assiduité et Productivité — CNSSAP",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#081836",
+  "theme_color": "#163b82",
+  "icons": [
+    {
+      "src": "/logo.jpeg",
+      "sizes": "any",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}

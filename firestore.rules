@@ -1,0 +1,69 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAuth() {
+      return request.auth != null;
+    }
+
+    function userDoc() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function role() {
+      return userDoc().role;
+    }
+
+    function isSupervisor() {
+      return role() == 'dg' || role() == 'drh';
+    }
+
+    function isChef() {
+      return role() == 'chef';
+    }
+
+    // ── users ──────────────────────────────────────────────────────────────
+    match /users/{userId} {
+      allow read: if isAuth() && (request.auth.uid == userId || isSupervisor());
+      // DRH manages accounts; agents can update their own non-sensitive fields
+      allow create, update: if isAuth() && (
+        role() == 'drh' ||
+        (request.auth.uid == userId &&
+         !request.resource.data.diff(resource.data).affectedKeys()
+           .hasAny(['role', 'directionId', 'matricule', 'status']))
+      );
+      allow delete: if isAuth() && role() == 'drh';
+    }
+
+    // ── directions ─────────────────────────────────────────────────────────
+    match /directions/{dirId} {
+      allow read:  if isAuth();
+      allow write: if isAuth() && role() == 'drh';
+    }
+
+    // ── rdj_reports ────────────────────────────────────────────────────────
+    match /rdj_reports/{reportId} {
+      allow read: if isAuth() && (
+        isSupervisor() ||
+        request.auth.uid == resource.data.userId ||
+        (isChef() && resource.data.directionId == userDoc().directionId)
+      );
+      // Agent submits / updates their own report only
+      allow create: if isAuth() && request.resource.data.userId == request.auth.uid;
+      allow update: if isAuth() && resource.data.userId == request.auth.uid;
+      allow delete: if isAuth() && isSupervisor();
+    }
+
+    // ── alerts ─────────────────────────────────────────────────────────────
+    match /alerts/{alertId} {
+      allow read:  if isAuth() && (isSupervisor() || isChef());
+      allow write: if isAuth() && role() == 'drh';
+    }
+
+    // ── config ─────────────────────────────────────────────────────────────
+    match /config/{configId} {
+      allow read:  if isAuth();
+      allow write: if isAuth() && role() == 'drh';
+    }
+  }
+}

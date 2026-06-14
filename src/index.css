@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: #0a0a0a;
+    color: #e0e0e0;
+    font-family: "Segoe UI", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  #root { min-height: 100svh; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar        { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track  { background: transparent; }
+  ::-webkit-scrollbar-thumb  { background: #2a2a2a; border-radius: 99px; }
+  ::-webkit-scrollbar-thumb:hover { background: #4d9fff; }
+
+  /* Selection */
+  ::selection { background: rgba(0,63,127,0.45); color: #fff; }
+
+  /* Focus ring global */
+  :focus-visible { outline: 2px solid #4d9fff; outline-offset: 2px; }
+
+  /* Time input calendar icon */
+  input[type="time"]::-webkit-calendar-picker-indicator,
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.5);
+    cursor: pointer;
+  }
+}
+
+@layer components {
+  /* Gradient accent top on card */
+  .card-accent {
+    position: relative;
+    overflow: hidden;
+  }
+  .card-accent::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #003f7f 0%, #4d9fff 100%);
+  }
+
+  /* Gradient button */
+  .btn-primary {
+    @apply bg-gradient-to-r from-cnssap-primary to-cnssap-hover text-white font-semibold
+           rounded-lg transition-all duration-200 hover:opacity-90 hover:shadow-lg
+           disabled:opacity-50 disabled:cursor-not-allowed;
+    box-shadow: 0 4px 14px rgba(0,63,127,0.3);
+  }
+
+  /* Glass card */
+  .glass {
+    background: rgba(255,255,255,0.04);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  /* Glow ring on focus */
+  .input-premium {
+    @apply w-full px-3 py-2 bg-cnssap-surface2 border border-cnssap-border2 rounded-lg
+           text-sm text-cnssap-text placeholder-cnssap-dim transition-all duration-200;
+  }
+  .input-premium:focus {
+    outline: none;
+    border-color: #4d9fff;
+    box-shadow: 0 0 0 3px rgba(77,159,255,0.12);
+  }
+  .input-premium:disabled {
+    opacity: 0.45;
+  }
+}
+
+/* Page entrance */
+.page-enter { animation: fadeUp 0.35s ease both; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Progress ring animation */
+@keyframes ringFill {
+  from { stroke-dashoffset: 200; }
+}
