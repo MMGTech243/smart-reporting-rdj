@@ -34,7 +34,7 @@ function RoleRoute({ roles, children }) {
   const { userProfile, loading } = useAuth();
   if (loading) return <LoadingScreen />;
   if (!userProfile || !roles.includes(userProfile.role))
-    return <Navigate to="/non-autorise" replace />;
+    return <Navigate to="/app/non-autorise" replace />;
   return children;
 }
 
@@ -44,8 +44,8 @@ function HomeRedirect() {
   if (loading) return <LoadingScreen />;
   if (!userProfile) return <Navigate to="/login" replace />;
   if (userProfile.role === 'dg' || userProfile.role === 'drh')
-    return <Navigate to="/dashboard" replace />;
-  return <Navigate to="/rdj" replace />;
+    return <Navigate to="/app/dashboard" replace />;
+  return <Navigate to="/app/rdj" replace />;
 }
 
 function AppRoutes() {
