@@ -43,6 +43,7 @@ function HomeRedirect() {
   const { userProfile, loading } = useAuth();
   if (loading) return <LoadingScreen />;
   if (!userProfile) return <Navigate to="/login" replace />;
+  if (userProfile.role === 'admin') return <Navigate to="/app/admin" replace />;
   if (userProfile.role === 'dg' || userProfile.role === 'drh')
     return <Navigate to="/app/dashboard" replace />;
   return <Navigate to="/app/rdj" replace />;
@@ -72,7 +73,7 @@ function AppRoutes() {
         <Route path="alertes"
           element={<RoleRoute roles={['dg','drh']}><Alertes /></RoleRoute>} />
         <Route path="admin"
-          element={<RoleRoute roles={['drh']}><AdminPanel /></RoleRoute>} />
+          element={<RoleRoute roles={['admin']}><AdminPanel /></RoleRoute>} />
         <Route path="non-autorise" element={<Unauthorized />} />
         <Route path="*"            element={<Navigate to="/app" replace />} />
       </Route>

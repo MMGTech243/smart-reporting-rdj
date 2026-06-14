@@ -32,6 +32,16 @@ const ROLES = [
     bg:    'rgba(230,126,34,0.08)',
     border:'rgba(230,126,34,0.2)',
   },
+  {
+    id:    'admin',
+    icon:  '💻',
+    title: 'Responsable Informatique',
+    sub:   'Admin Système',
+    desc:  'Gestion des comptes · Création d\'utilisateurs · Configuration système',
+    color: '#9b59b6',
+    bg:    'rgba(155,89,182,0.08)',
+    border:'rgba(155,89,182,0.2)',
+  },
 ];
 
 export default function RoleSelect() {

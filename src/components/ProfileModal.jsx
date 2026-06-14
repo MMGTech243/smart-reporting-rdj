@@ -8,8 +8,8 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { DIRECTIONS } from '../data/directions';
 
 const ROLE_LABELS = {
-  fr: { dg:'Directeur Général', drh:'DRH / Administration', chef:'Chef de Section', agent:'Agent / Stagiaire' },
-  en: { dg:'Director General',  drh:'HR / Administration',  chef:'Section Head',    agent:'Staff / Intern' },
+  fr: { dg:'Directeur Général', drh:'DRH / Administration', chef:'Chef de Section', agent:'Agent / Stagiaire', admin:'Resp. Informatique' },
+  en: { dg:'Director General',  drh:'HR / Administration',  chef:'Section Head',    agent:'Staff / Intern',    admin:'IT Administrator' },
 };
 
 export default function ProfileModal({ onClose, onAbout }) {

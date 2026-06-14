@@ -11,7 +11,7 @@ const NAV = [
   { to: '/app/analyses',   key: 'nav.analyses',   icon: '📊', roles: ['dg','drh'] },
   { to: '/app/alertes',    key: 'nav.alertes',    icon: '🔔', roles: ['dg','drh'] },
   { to: '/app/historique', key: 'nav.historique', icon: '📁', roles: ['dg','drh','chef','agent'] },
-  { to: '/app/admin',      key: 'nav.admin',      icon: '⚙️', roles: ['drh'] },
+  { to: '/app/admin',      key: 'nav.admin',      icon: '⚙️', roles: ['admin'] },
 ];
 
 export default function BottomNav() {

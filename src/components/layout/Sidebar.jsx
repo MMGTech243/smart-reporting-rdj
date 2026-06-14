@@ -11,12 +11,12 @@ const NAV = [
   { to: '/app/analyses',   key: 'nav.analyses',    icon: '📊', roles: ['dg','drh'] },
   { to: '/app/alertes',    key: 'nav.alertes',     icon: '🔔', roles: ['dg','drh'] },
   { to: '/app/historique', key: 'nav.historique',  icon: '📁', roles: ['dg','drh','chef','agent'] },
-  { to: '/app/admin',      key: 'nav.admin',       icon: '⚙️', roles: ['drh'] },
+  { to: '/app/admin',      key: 'nav.admin',       icon: '⚙️', roles: ['admin'] },
 ];
 
 const ROLE_LABELS = {
-  fr: { dg:'Directeur Général', drh:'DRH / Administration', chef:'Chef de Section', agent:'Agent / Stagiaire' },
-  en: { dg:'Director General',  drh:'HR / Administration',  chef:'Section Head',    agent:'Staff / Intern' },
+  fr: { dg:'Directeur Général', drh:'DRH / Administration', chef:'Chef de Section', agent:'Agent / Stagiaire', admin:'Resp. Informatique' },
+  en: { dg:'Director General',  drh:'HR / Administration',  chef:'Section Head',    agent:'Staff / Intern',    admin:'IT Administrator' },
 };
 
 export default function Sidebar() {
