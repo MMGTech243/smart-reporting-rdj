@@ -11,15 +11,15 @@ export default function Login() {
   const [loading, setLoading]      = useState(false);
   const [demoLoading, setDemoLoading] = useState(false);
 
-  if (user) return <Navigate to="/dashboard" replace />;
+  if (user) return <Navigate to="/app" replace />;
 
   const handleDemo = async () => {
     setDemoLoading(true);
     try {
       await loginDemo();
-      navigate('/dashboard', { replace: true });
+      navigate('/app', { replace: true });
     } catch (e) {
-      setError('Accès démo indisponible. Activez l\'authentification anonyme dans Firebase Console.');
+      setError("Accès démo indisponible. Activez l'authentification anonyme dans Firebase Console.");
     } finally {
       setDemoLoading(false);
     }
@@ -31,7 +31,7 @@ export default function Login() {
     setLoading(true);
     try {
       await login(email, password);
-      navigate('/rdj', { replace: true });
+      navigate('/app', { replace: true });
     } catch {
       setError('Email ou mot de passe incorrect.');
     } finally {

@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import Layout       from './components/layout/Layout';
 import Login        from './pages/Login';
+import Splash       from './pages/Splash';
 import Unauthorized from './pages/Unauthorized';
 import RDJForm      from './pages/agent/RDJForm';
 import MyHistory    from './pages/agent/MyHistory';
@@ -9,7 +10,6 @@ import Dashboard    from './pages/dg/Dashboard';
 import Analyses     from './pages/dg/Analyses';
 import Alertes      from './pages/dg/Alertes';
 import AdminPanel   from './pages/admin/AdminPanel';
-import Splash       from './pages/Splash';
 
 function LoadingScreen() {
   return (
@@ -22,46 +22,46 @@ function LoadingScreen() {
   );
 }
 
+// Si non connecté → /login  (pas /splash — la splash est l'entrée volontaire)
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
   if (loading) return <LoadingScreen />;
-  if (!user)   return <Navigate to="/splash" replace />;
+  if (!user)   return <Navigate to="/login" replace />;
   return children;
 }
 
 function RoleRoute({ roles, children }) {
   const { userProfile, loading } = useAuth();
   if (loading) return <LoadingScreen />;
-  if (!userProfile || !roles.includes(userProfile.role)) {
+  if (!userProfile || !roles.includes(userProfile.role))
     return <Navigate to="/non-autorise" replace />;
-  }
   return children;
 }
 
-function RootRedirect() {
+// Redirige vers la bonne page selon le rôle
+function HomeRedirect() {
   const { userProfile, loading } = useAuth();
   if (loading) return <LoadingScreen />;
   if (!userProfile) return <Navigate to="/login" replace />;
-  const role = userProfile.role;
-  if (role === 'dg' || role === 'drh') return <Navigate to="/dashboard" replace />;
+  if (userProfile.role === 'dg' || userProfile.role === 'drh')
+    return <Navigate to="/dashboard" replace />;
   return <Navigate to="/rdj" replace />;
 }
 
 function AppRoutes() {
   return (
     <Routes>
+      {/* Entrée de l'app — toujours la splash, sans vérification d'auth */}
+      <Route path="/"       element={<Splash />} />
       <Route path="/splash" element={<Splash />} />
       <Route path="/login"  element={<Login />} />
 
+      {/* Pages protégées dans le Layout */}
       <Route
-        path="/"
-        element={
-          <ProtectedRoute>
-            <Layout />
-          </ProtectedRoute>
-        }
+        path="/app"
+        element={<ProtectedRoute><Layout /></ProtectedRoute>}
       >
-        <Route index element={<RootRedirect />} />
+        <Route index element={<HomeRedirect />} />
         <Route path="rdj"          element={<RDJForm />} />
         <Route path="historique"   element={<MyHistory />} />
         <Route path="dashboard"
@@ -73,8 +73,11 @@ function AppRoutes() {
         <Route path="admin"
           element={<RoleRoute roles={['drh']}><AdminPanel /></RoleRoute>} />
         <Route path="non-autorise" element={<Unauthorized />} />
-        <Route path="*"            element={<Navigate to="/" replace />} />
+        <Route path="*"            element={<Navigate to="/app" replace />} />
       </Route>
+
+      {/* Toute URL inconnue → splash */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

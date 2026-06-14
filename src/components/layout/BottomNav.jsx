@@ -6,12 +6,12 @@ import ProfileModal from '../ProfileModal';
 import AboutModal from '../AboutModal';
 
 const NAV = [
-  { to: '/rdj',        key: 'nav.rdj',       icon: '📋', roles: ['dg','drh','chef','agent'] },
-  { to: '/dashboard',  key: 'nav.dashboard',  icon: '🏠', roles: ['dg','drh'] },
-  { to: '/analyses',   key: 'nav.analyses',   icon: '📊', roles: ['dg','drh'] },
-  { to: '/alertes',    key: 'nav.alertes',    icon: '🔔', roles: ['dg','drh'] },
-  { to: '/historique', key: 'nav.historique', icon: '📁', roles: ['dg','drh','chef','agent'] },
-  { to: '/admin',      key: 'nav.admin',      icon: '⚙️', roles: ['drh'] },
+  { to: '/app/rdj',        key: 'nav.rdj',       icon: '📋', roles: ['dg','drh','chef','agent'] },
+  { to: '/app/dashboard',  key: 'nav.dashboard',  icon: '🏠', roles: ['dg','drh'] },
+  { to: '/app/analyses',   key: 'nav.analyses',   icon: '📊', roles: ['dg','drh'] },
+  { to: '/app/alertes',    key: 'nav.alertes',    icon: '🔔', roles: ['dg','drh'] },
+  { to: '/app/historique', key: 'nav.historique', icon: '📁', roles: ['dg','drh','chef','agent'] },
+  { to: '/app/admin',      key: 'nav.admin',      icon: '⚙️', roles: ['drh'] },
 ];
 
 export default function BottomNav() {
