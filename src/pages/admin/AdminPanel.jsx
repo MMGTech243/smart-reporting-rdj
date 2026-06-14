@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import {
   collection, getDocs, doc, setDoc, updateDoc, getDoc, deleteDoc,
   serverTimestamp,
@@ -36,7 +36,7 @@ function Modal({ title, onClose, children }) {
 function Field({ label, required, children }) {
   return (
     <div>
-      <label className="block text-[11px] font-medium text-cnssap-muted mb-1">
+      <label className="block text-[13px] font-medium text-cnssap-muted mb-1">
         {label} {required && <span className="text-cnssap-danger">*</span>}
       </label>
       {children}
@@ -159,7 +159,7 @@ function AgentsTab() {
             <thead style={{background:'#0d0d0d'}}>
               <tr>
                 {['Agent','Matricule','Direction','Rôle','Statut','Actions'].map(h=>(
-                  <th key={h} className="text-left px-4 py-3 text-[10px] text-cnssap-dim uppercase tracking-wide font-semibold">{h}</th>
+                  <th key={h} className="text-left px-4 py-3 text-xs text-cnssap-dim uppercase tracking-wide font-semibold">{h}</th>
                 ))}
               </tr>
             </thead>
@@ -180,7 +180,7 @@ function AgentsTab() {
                         </div>
                         <div>
                           <p className="font-medium text-white text-sm">{a.prenom} {a.nom}</p>
-                          <p className="text-[10px] text-cnssap-dim">{a.poste??'—'}</p>
+                          <p className="text-xs text-cnssap-dim">{a.poste??'—'}</p>
                         </div>
                       </div>
                     </td>
@@ -189,13 +189,13 @@ function AgentsTab() {
                       {DIRECTIONS.find(d=>d.id===a.directionId)?.nom?.replace('Direction des ','')?.replace('Direction ','')??'—'}
                     </td>
                     <td className="px-4 py-3">
-                      <span className="text-[10px] font-bold px-2 py-1 rounded-full"
+                      <span className="text-xs font-bold px-2 py-1 rounded-full"
                         style={{background:badge.bg,color:badge.color}}>
                         {badge.label}
                       </span>
                     </td>
                     <td className="px-4 py-3">
-                      <span className={`text-[10px] font-bold px-2 py-1 rounded-full ${
+                      <span className={`text-xs font-bold px-2 py-1 rounded-full ${
                         isActive
                           ? 'bg-green-900/30 text-cnssap-success'
                           : 'bg-red-900/20 text-cnssap-danger'
@@ -339,18 +339,18 @@ function DirectionsTab() {
             onMouseEnter={e=>e.currentTarget.style.background='#161616'}
             onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
             <div className="flex items-center gap-3">
-              <div className="w-7 h-7 rounded-lg flex items-center justify-center text-[10px] font-bold text-white"
+              <div className="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold text-white"
                 style={{background:'linear-gradient(135deg,#003f7f,#0060c0)'}}>
                 {d.nom[0]}
               </div>
               <div>
                 <p className="text-sm text-white">{d.nom}</p>
-                <p className="text-[10px] text-cnssap-dim font-mono">id: {d.id}</p>
+                <p className="text-xs text-cnssap-dim font-mono">id: {d.id}</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
               {d.builtin
-                ? <span className="text-[10px] text-cnssap-dim bg-cnssap-surface2 px-2 py-0.5 rounded-full">Par défaut</span>
+                ? <span className="text-xs text-cnssap-dim bg-cnssap-surface2 px-2 py-0.5 rounded-full">Par défaut</span>
                 : <button onClick={()=>handleDelete(d.id)}
                     className="text-xs text-cnssap-danger hover:text-red-400 transition-colors">Supprimer</button>}
             </div>
@@ -471,10 +471,10 @@ function FormulairesTab() {
             <span className="text-2xl">{f.icon}</span>
             <div>
               <p className="text-sm font-medium text-white">{f.label}</p>
-              <p className="text-[10px] text-cnssap-dim mt-0.5">{f.desc}</p>
+              <p className="text-xs text-cnssap-dim mt-0.5">{f.desc}</p>
             </div>
           </div>
-          <span className={`text-[10px] font-bold px-3 py-1 rounded-full ${
+          <span className={`text-xs font-bold px-3 py-1 rounded-full ${
             f.status === 'active'
               ? 'bg-green-900/30 text-cnssap-success border border-cnssap-success/25'
               : 'bg-cnssap-surface2 text-cnssap-dim border border-cnssap-border'

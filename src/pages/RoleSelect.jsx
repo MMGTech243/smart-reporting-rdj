@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+﻿import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 const ROLES = [
@@ -103,10 +103,10 @@ export default function RoleSelect() {
                     <p className="font-semibold text-white text-sm">{r.title}</p>
                     <span className="text-xs font-bold shrink-0" style={{ color: r.color }}>→</span>
                   </div>
-                  <p className="text-[10px] mt-0.5 mb-1.5 font-medium" style={{ color: r.color }}>
+                  <p className="text-xs mt-0.5 mb-1.5 font-medium" style={{ color: r.color }}>
                     {r.sub}
                   </p>
-                  <p className="text-[11px] text-cnssap-dim leading-relaxed">{r.desc}</p>
+                  <p className="text-[13px] text-cnssap-dim leading-relaxed">{r.desc}</p>
                 </div>
               </div>
             </button>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useNavigate, Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -137,7 +137,7 @@ export default function Login() {
         </div>
 
         {/* Version */}
-        <p className="text-center text-[10px] text-cnssap-dim/40 mt-4">
+        <p className="text-center text-xs text-cnssap-dim/40 mt-4">
           Smart Reporting RDJ · v1.0
         </p>
       </div>

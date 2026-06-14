@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useLanguage } from '../../contexts/LanguageContext';
@@ -52,7 +52,7 @@ export default function Sidebar() {
               <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-cnssap-success rounded-full ring-2 ring-[#0d0d0d]" />
             </div>
             <div>
-              <p className="text-[10px] font-bold text-cnssap-accent uppercase tracking-widest">CNSSAP</p>
+              <p className="text-xs font-bold text-cnssap-accent uppercase tracking-widest">CNSSAP</p>
               <p className="text-sm font-bold text-white leading-tight">Smart Reporting RDJ</p>
             </div>
           </div>
@@ -60,7 +60,7 @@ export default function Sidebar() {
 
         {/* Nav */}
         <nav className="flex-1 px-3 py-4 space-y-0.5">
-          <p className="text-[10px] font-semibold text-cnssap-dim uppercase tracking-widest px-3 mb-3">Navigation</p>
+          <p className="text-xs font-semibold text-cnssap-dim uppercase tracking-widest px-3 mb-3">Navigation</p>
           {NAV.filter(n => n.roles.includes(role)).map(n => (
             <NavLink key={n.to} to={n.to}
               className={({ isActive }) => isActive
@@ -97,7 +97,7 @@ export default function Sidebar() {
               <p className="text-sm font-semibold text-white truncate">
                 {userProfile?.prenom} {userProfile?.nom}
               </p>
-              <p className="text-[10px] text-cnssap-accent truncate">{roleLabel}</p>
+              <p className="text-xs text-cnssap-accent truncate">{roleLabel}</p>
             </div>
             <span className="text-cnssap-dim text-xs">›</span>
           </button>

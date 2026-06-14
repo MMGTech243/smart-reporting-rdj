@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { collection, query, where, onSnapshot, getDocs } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, CartesianGrid } from 'recharts';
@@ -33,7 +33,7 @@ function KpiCard({ icon, label, value, sub, accent = '#4d9fff', children }) {
         style={{ background: `linear-gradient(90deg, ${accent}88 0%, ${accent}22 100%)` }} />
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1">
-          <p className="text-[11px] text-cnssap-dim font-medium mb-1">{label}</p>
+          <p className="text-[13px] text-cnssap-dim font-medium mb-1">{label}</p>
           {children || (
             <p className="text-3xl font-bold text-white leading-none tracking-tight">{value}</p>
           )}
@@ -126,7 +126,7 @@ export default function Dashboard() {
           style={{ background: '#111', border: '1px solid #1e1e1e' }}>
           <div className="absolute top-0 left-0 right-0 h-0.5"
             style={{ background: 'linear-gradient(90deg, #003f7f88, transparent)' }} />
-          <p className="text-[11px] text-cnssap-dim font-medium mb-3">Taux de soumission</p>
+          <p className="text-[13px] text-cnssap-dim font-medium mb-3">Taux de soumission</p>
           <div className="flex items-center gap-3">
             <div className="relative">
               <ProgressRing value={taux} />
@@ -190,13 +190,13 @@ export default function Dashboard() {
               {nonSoumis.map(u => (
                 <li key={u.id} className="flex items-center gap-3 px-3 py-2.5 rounded-lg"
                   style={{ background: 'rgba(230,126,34,0.06)', border: '1px solid rgba(230,126,34,0.15)' }}>
-                  <div className="w-7 h-7 rounded-lg flex items-center justify-center text-[10px] font-bold text-white shrink-0"
+                  <div className="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold text-white shrink-0"
                     style={{ background: 'linear-gradient(135deg,#e67e22,#d35400)' }}>
                     {(u.prenom?.[0] ?? u.nom?.[0] ?? '?').toUpperCase()}
                   </div>
                   <div className="min-w-0">
                     <p className="text-xs font-medium text-white truncate">{u.prenom} {u.nom}</p>
-                    <p className="text-[10px] text-cnssap-dim truncate">
+                    <p className="text-xs text-cnssap-dim truncate">
                       {DIRECTIONS.find(d => d.id === u.directionId)?.nom?.replace('Direction des ','')?.replace('Direction ','') ?? '—'}
                     </p>
                   </div>
@@ -226,7 +226,7 @@ export default function Dashboard() {
               <thead>
                 <tr style={{ borderBottom: '1px solid #1e1e1e' }}>
                   {['Agent','Direction','Arrivée','Heures eff.','Tâches','Soumis à'].map(h => (
-                    <th key={h} className="text-left pb-2.5 text-[10px] text-cnssap-dim uppercase tracking-wide font-semibold">{h}</th>
+                    <th key={h} className="text-left pb-2.5 text-xs text-cnssap-dim uppercase tracking-wide font-semibold">{h}</th>
                   ))}
                 </tr>
               </thead>

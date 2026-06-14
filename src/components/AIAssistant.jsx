@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+﻿import { useState, useRef, useEffect } from 'react';
 
 const MODEL = 'claude-haiku-4-5-20251001';
 const API_URL = 'https://api.anthropic.com/v1/messages';
@@ -130,15 +130,15 @@ export default function AIAssistant({ todayReports = [], totalAgents = 0 }) {
           </div>
           <div className="text-left">
             <p className="text-sm font-semibold text-white">Assistant IA CNSSAP</p>
-            <p className="text-[10px] text-cnssap-dim">
+            <p className="text-xs text-cnssap-dim">
               {open ? 'Cliquer pour réduire' : `Journée : ${taux}% de soumission — ${todayReports.length} / ${totalAgents} rapports`}
             </p>
           </div>
         </div>
         <div className="flex items-center gap-2">
           {apiKey
-            ? <span className="text-[10px] text-cnssap-success bg-green-900/20 border border-cnssap-success/25 px-2 py-0.5 rounded-full">Claude IA</span>
-            : <span className="text-[10px] text-cnssap-warning bg-amber-900/20 border border-cnssap-warning/20 px-2 py-0.5 rounded-full">Clé API manquante</span>}
+            ? <span className="text-xs text-cnssap-success bg-green-900/20 border border-cnssap-success/25 px-2 py-0.5 rounded-full">Claude IA</span>
+            : <span className="text-xs text-cnssap-warning bg-amber-900/20 border border-cnssap-warning/20 px-2 py-0.5 rounded-full">Clé API manquante</span>}
           <span className="text-cnssap-dim text-xs transition-transform duration-200"
             style={{ display: 'inline-block', transform: open ? 'rotate(180deg)' : 'rotate(0deg)' }}>▾</span>
         </div>
@@ -156,7 +156,7 @@ export default function AIAssistant({ todayReports = [], totalAgents = 0 }) {
                 <div className="flex flex-wrap gap-2 justify-center">
                   {QUICK.map(q => (
                     <button key={q} onClick={() => send(q)}
-                      className="text-[11px] px-3 py-1.5 rounded-full text-cnssap-accent transition-colors hover:text-white"
+                      className="text-[13px] px-3 py-1.5 rounded-full text-cnssap-accent transition-colors hover:text-white"
                       style={{ background: 'rgba(0,63,127,0.2)', border: '1px solid rgba(77,159,255,0.2)' }}>
                       {q}
                     </button>
@@ -192,13 +192,13 @@ export default function AIAssistant({ todayReports = [], totalAgents = 0 }) {
               <div className="flex flex-wrap gap-1.5 mb-2">
                 {QUICK.slice(0,2).map(q => (
                   <button key={q} onClick={() => send(q)}
-                    className="text-[10px] px-2.5 py-1 rounded-full text-cnssap-dim hover:text-white transition-colors"
+                    className="text-xs px-2.5 py-1 rounded-full text-cnssap-dim hover:text-white transition-colors"
                     style={{ background: '#1a1a1a', border: '1px solid #222' }}>
                     {q}
                   </button>
                 ))}
                 <button onClick={() => setMessages([])}
-                  className="text-[10px] px-2.5 py-1 rounded-full text-cnssap-dim hover:text-cnssap-danger transition-colors ml-auto"
+                  className="text-xs px-2.5 py-1 rounded-full text-cnssap-dim hover:text-cnssap-danger transition-colors ml-auto"
                   style={{ background: '#1a1a1a', border: '1px solid #222' }}>
                   Effacer
                 </button>
@@ -223,7 +223,7 @@ export default function AIAssistant({ todayReports = [], totalAgents = 0 }) {
                 ↑
               </button>
             </div>
-            <p className="text-[10px] text-cnssap-dim mt-1.5 text-right">Entrée pour envoyer · Maj+Entrée pour nouvelle ligne</p>
+            <p className="text-xs text-cnssap-dim mt-1.5 text-right">Entrée pour envoyer · Maj+Entrée pour nouvelle ligne</p>
           </div>
         </div>
       )}

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -60,7 +60,7 @@ export default function Splash() {
 
         {/* Texte */}
         <div style={{ opacity: visible ? 1 : 0, transition: 'opacity 0.6s ease 0.2s' }}>
-          <p className="text-[11px] font-bold text-cnssap-accent uppercase tracking-[0.35em] mb-3">CNSSAP</p>
+          <p className="text-[13px] font-bold text-cnssap-accent uppercase tracking-[0.35em] mb-3">CNSSAP</p>
           <h1 className="text-3xl font-bold text-white tracking-tight mb-2">Smart Reporting RDJ</h1>
           <p className="text-sm text-cnssap-muted leading-relaxed max-w-xs mx-auto">
             Reporting Déclaratif Journalier<br />d'Assiduité et Productivité
@@ -89,7 +89,7 @@ export default function Splash() {
             <>
               <div className="w-full px-4 py-3 rounded-xl text-center"
                 style={{ background: 'rgba(46,204,113,0.08)', border: '1px solid rgba(46,204,113,0.2)' }}>
-                <p className="text-[10px] text-cnssap-success mb-0.5">Connecté en tant que</p>
+                <p className="text-xs text-cnssap-success mb-0.5">Connecté en tant que</p>
                 <p className="text-sm font-semibold text-white">
                   {userProfile?.prenom} {userProfile?.nom}
                 </p>
@@ -122,7 +122,7 @@ export default function Splash() {
       {/* Footer */}
       <div className="absolute bottom-8 text-center"
         style={{ opacity: visible ? 1 : 0, transition: 'opacity 0.6s ease 0.7s' }}>
-        <p className="text-[10px] text-cnssap-dim/50">v1.0.0 · © 2025 CNSSAP · Tous droits réservés</p>
+        <p className="text-xs text-cnssap-dim/50">v1.0.0 · © 2025 CNSSAP · Tous droits réservés</p>
       </div>
     </div>
   );

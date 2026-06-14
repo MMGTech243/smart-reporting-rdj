@@ -1,4 +1,4 @@
-import { useLanguage } from '../contexts/LanguageContext';
+﻿import { useLanguage } from '../contexts/LanguageContext';
 
 const STACK = [
   { icon: '⚛️', name: 'React 19',          role: 'UI Framework' },
@@ -55,13 +55,13 @@ export default function AboutModal({ onClose }) {
             <span className="text-2xl">🏛</span>
             <div>
               <p className="text-xs font-semibold text-white">CNSSAP</p>
-              <p className="text-[10px] text-cnssap-dim mt-0.5">{t('about.org')}</p>
+              <p className="text-xs text-cnssap-dim mt-0.5">{t('about.org')}</p>
             </div>
           </div>
 
           {/* Stack */}
           <div>
-            <p className="text-[10px] font-semibold text-cnssap-dim uppercase tracking-widest mb-2">{t('about.stack')}</p>
+            <p className="text-xs font-semibold text-cnssap-dim uppercase tracking-widest mb-2">{t('about.stack')}</p>
             <div className="rounded-xl overflow-hidden" style={{ border: '1px solid #1e1e1e' }}>
               {STACK.map((s, i) => (
                 <div key={s.name}
@@ -73,7 +73,7 @@ export default function AboutModal({ onClose }) {
                     <span className="text-base w-5 text-center">{s.icon}</span>
                     <span className="text-xs font-medium text-white">{s.name}</span>
                   </div>
-                  <span className="text-[10px] text-cnssap-dim">{s.role}</span>
+                  <span className="text-xs text-cnssap-dim">{s.role}</span>
                 </div>
               ))}
             </div>
@@ -81,7 +81,7 @@ export default function AboutModal({ onClose }) {
 
           {/* Links */}
           <div>
-            <p className="text-[10px] font-semibold text-cnssap-dim uppercase tracking-widest mb-2">{t('about.links')}</p>
+            <p className="text-xs font-semibold text-cnssap-dim uppercase tracking-widest mb-2">{t('about.links')}</p>
             <div className="flex gap-2">
               <a href="https://smart-reporting-rdj.web.app" target="_blank" rel="noreferrer"
                 className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-medium text-cnssap-accent transition-colors hover:text-white"
@@ -99,7 +99,7 @@ export default function AboutModal({ onClose }) {
           {/* Footer */}
           <div className="text-center space-y-1 pt-1">
             <p className="text-xs text-cnssap-muted">{t('about.dev')}</p>
-            <p className="text-[10px] text-cnssap-dim">{t('about.year')}</p>
+            <p className="text-xs text-cnssap-dim">{t('about.year')}</p>
           </div>
 
           <button onClick={onClose}

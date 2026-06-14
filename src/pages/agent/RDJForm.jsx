@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { collection, addDoc, query, where, getDocs, updateDoc, doc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { useAuth } from '../../contexts/AuthContext';
@@ -33,7 +33,7 @@ function SectionCard({ index, num, title, subtitle, children }) {
           </div>
           <div>
             <h3 className="font-semibold text-white text-sm">{title}</h3>
-            {subtitle && <p className="text-[11px] text-cnssap-dim mt-0.5">{subtitle}</p>}
+            {subtitle && <p className="text-[13px] text-cnssap-dim mt-0.5">{subtitle}</p>}
           </div>
         </div>
         {children}
@@ -45,7 +45,7 @@ function SectionCard({ index, num, title, subtitle, children }) {
 function Field({ label, required, children }) {
   return (
     <div>
-      <label className="block text-[11px] font-medium text-cnssap-muted mb-1">
+      <label className="block text-[13px] font-medium text-cnssap-muted mb-1">
         {label} {required && <span className="text-cnssap-danger">*</span>}
       </label>
       {children}
@@ -137,10 +137,10 @@ export default function RDJForm() {
         <div>
           <h1 className="text-xl font-bold text-white tracking-tight">Rapport RDJ</h1>
           <p className="text-xs text-cnssap-dim mt-1 capitalize">{dateLabel}</p>
-          <p className="text-[10px] text-cnssap-dim/50 mt-0.5">Formulaire FOR-DRH-001</p>
+          <p className="text-xs text-cnssap-dim/50 mt-0.5">Formulaire FOR-DRH-001</p>
         </div>
         {existingId && !saveSuccess && (
-          <span className="text-[10px] font-semibold px-3 py-1 rounded-full"
+          <span className="text-xs font-semibold px-3 py-1 rounded-full"
             style={{background:'rgba(46,204,113,0.1)',border:'1px solid rgba(46,204,113,0.25)',color:'#2ecc71'}}>
             ✓ Soumis
           </span>
@@ -205,7 +205,7 @@ export default function RDJForm() {
               style={{background:'rgba(46,204,113,0.07)',border:'1px solid rgba(46,204,113,0.2)'}}>
               <span className="text-cnssap-success text-xl">⏱</span>
               <div>
-                <p className="text-[10px] text-cnssap-success/70 font-medium">Heures effectives calculées</p>
+                <p className="text-xs text-cnssap-success/70 font-medium">Heures effectives calculées</p>
                 <p className="text-2xl font-bold text-cnssap-success">{heuresEff}</p>
               </div>
             </div>
@@ -213,7 +213,7 @@ export default function RDJForm() {
 
           {ass.mouvements.length > 0 && (
             <div className="mt-4 space-y-2">
-              <p className="text-[10px] font-semibold text-cnssap-muted uppercase tracking-wide">Autres mouvements</p>
+              <p className="text-xs font-semibold text-cnssap-muted uppercase tracking-wide">Autres mouvements</p>
               {ass.mouvements.map((m,i)=>(
                 <div key={i} className="flex gap-2">
                   <input type="time" value={m.heure} onChange={e=>updMvt(i,'heure',e.target.value)} className="input-premium w-32" />

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+﻿import { useState, useEffect, useCallback } from 'react';
 import {
   collection, query, where, orderBy, limit, getDocs,
   doc, updateDoc, serverTimestamp, deleteField,
@@ -30,16 +30,16 @@ function SignatureSlot({ label, short, signature, canSign, onSign, onUnsign, cur
         <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 text-base"
           style={{ background: 'rgba(46,204,113,0.12)' }}>✅</div>
         <div className="flex-1 min-w-0">
-          <p className="text-[10px] font-bold text-cnssap-success uppercase tracking-wide mb-0.5">{short}</p>
+          <p className="text-xs font-bold text-cnssap-success uppercase tracking-wide mb-0.5">{short}</p>
           <p className="text-xs font-semibold text-white">
             {signature.prenom} {signature.nom}
           </p>
-          <p className="text-[10px] text-cnssap-dim">{signature.poste}</p>
-          <p className="text-[10px] text-cnssap-dim mt-0.5">{dateLabel}</p>
+          <p className="text-xs text-cnssap-dim">{signature.poste}</p>
+          <p className="text-xs text-cnssap-dim mt-0.5">{dateLabel}</p>
         </div>
         {signature.signedBy === currentUserId && (
           <button onClick={onUnsign}
-            className="text-[10px] text-red-400 hover:text-red-300 shrink-0 transition-colors mt-0.5">
+            className="text-xs text-red-400 hover:text-red-300 shrink-0 transition-colors mt-0.5">
             ✕
           </button>
         )}
@@ -53,12 +53,12 @@ function SignatureSlot({ label, short, signature, canSign, onSign, onUnsign, cur
       <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 text-base"
         style={{ background: 'rgba(255,255,255,0.04)' }}>✍️</div>
       <div className="flex-1 min-w-0">
-        <p className="text-[10px] font-bold text-cnssap-dim uppercase tracking-wide mb-0.5">{short}</p>
+        <p className="text-xs font-bold text-cnssap-dim uppercase tracking-wide mb-0.5">{short}</p>
         <p className="text-xs text-cnssap-dim italic">{label}</p>
       </div>
       {canSign && (
         <button onClick={onSign}
-          className="text-[10px] font-bold shrink-0 px-2.5 py-1.5 rounded-lg transition-all"
+          className="text-xs font-bold shrink-0 px-2.5 py-1.5 rounded-lg transition-all"
           style={{
             background: 'rgba(77,159,255,0.1)',
             border: '1px solid rgba(77,159,255,0.3)',

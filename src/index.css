@@ -5,6 +5,10 @@
 @layer base {
   * { box-sizing: border-box; }
 
+  html {
+    font-size: 17px;
+  }
+
   body {
     margin: 0;
     background: #0a0a0a;

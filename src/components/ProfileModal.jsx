@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+﻿import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { doc, updateDoc } from 'firebase/firestore';
@@ -140,7 +140,7 @@ export default function ProfileModal({ onClose, onAbout }) {
 
           {/* Langue */}
           <div>
-            <p className="text-[10px] font-semibold text-cnssap-dim uppercase tracking-wide mb-2">{t('profile.language')}</p>
+            <p className="text-xs font-semibold text-cnssap-dim uppercase tracking-wide mb-2">{t('profile.language')}</p>
             <div className="flex gap-2">
               {[
                 { code: 'fr', label: '🇫🇷 Français' },

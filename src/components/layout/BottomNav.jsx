@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useLanguage } from '../../contexts/LanguageContext';
@@ -40,7 +40,7 @@ export default function BottomNav() {
               }
             >
               <span className="text-lg mb-0.5">{n.icon}</span>
-              <span className="text-[10px]">{t(n.key).split(' ')[0]}</span>
+              <span className="text-xs">{t(n.key).split(' ')[0]}</span>
             </NavLink>
           ))}
 
@@ -59,7 +59,7 @@ export default function BottomNav() {
                 </div>
               )}
             </div>
-            <span className="text-[10px]">{t('profile.title').split(' ')[1] ?? 'Profil'}</span>
+            <span className="text-xs">{t('profile.title').split(' ')[1] ?? 'Profil'}</span>
           </button>
         </div>
       </nav>
